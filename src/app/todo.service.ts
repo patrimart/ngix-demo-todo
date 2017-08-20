@@ -19,7 +19,7 @@ function genId (): string {
 
 /**
  * Mock service that poorly simulates communicating to a backend.
- * Request wil fail 10% of the time.
+ * Requests will fail 10% of the time.
  */
 @Injectable()
 export class TodoService {
