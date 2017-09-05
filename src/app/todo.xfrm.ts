@@ -7,7 +7,9 @@ import 'rxjs/add/operator/mergeMapTo';
 
 import { map } from 'ix/iterable/map';
 
-import { ixAction, IxAction, lens, ix } from '@ngix/store';
+import { ixAction, IxAction, ix } from '@ngix/store';
+
+import { lens, set, del } from '@ngix/lens';
 
 import { AppState } from './app.module';
 import { TodoService } from './todo.service';
@@ -32,7 +34,7 @@ export interface Todo {
 
 export const INIT_STATE: TodoState = { todos: {} };
 
-export const TODO_LENS = lens.lens('todos');
+export const TODO_LENS = lens('todos');
 export const TODO_ACTION = ixAction<TodoStateMap>(TODO_LENS);
 export const lmap = ix.lift<TodoStateMap>(map);
 
@@ -51,7 +53,7 @@ export function refresh (srv: TodoService) {
 export function done (srv: TodoService, todo: Todo) {
 
     const optTodo = { ...todo, isDone: !todo.isDone, error: undefined };
-    const setter = lens.set<TodoStateMap>([todo.trackId]);
+    const setter = set<TodoStateMap>([todo.trackId]);
     const update = lmap(setter(optTodo));
     const rollback = lmap(setter({ ...todo, error: 'This todo failed to update.' }));
 
@@ -66,7 +68,7 @@ export function done (srv: TodoService, todo: Todo) {
 export function add (srv: TodoService, title: string) {
 
     const todo = TodoService.Factory(title);
-    const setter = lens.set<TodoStateMap>([todo.trackId]);
+    const setter = set<TodoStateMap>([todo.trackId]);
     const update = lmap(setter(todo));
     const rollback = lmap(setter({ ...todo, error: 'This todo failed to be added.' }));
 
@@ -80,8 +82,8 @@ export function add (srv: TodoService, title: string) {
 
 export function remove (srv: TodoService, todo: Todo) {
 
-    const update = lmap(lens.del<TodoStateMap>([todo.trackId]));
-    const rollback = lmap(lens.set<TodoStateMap>([todo.trackId])({ ...todo, error: 'This todo failed to be removed.' }));
+    const update = lmap(del<TodoStateMap>([todo.trackId]));
+    const rollback = lmap(set<TodoStateMap>([todo.trackId])({ ...todo, error: 'This todo failed to be removed.' }));
 
     return TODO_ACTION('Remove', update,
         () => srv.remove(todo)

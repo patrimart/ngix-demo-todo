@@ -3,7 +3,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 
-import { IxStore, lens } from '@ngix/store';
+import { IxStore } from '@ngix/store';
+import { lens } from '@ngix/lens';
 
 import { AppState } from './app.module';
 import { TodoStateMap, refresh } from './todo.xfrm';
@@ -41,8 +42,8 @@ export class AppComponent {
     private store$: IxStore<AppState>,
     private todoSrv: TodoService,
   ) {
-    this.title = this.store$.view(lens.lens('appName'));
-    const todos = this.store$.view(lens.lens('todos'));
+    this.title = this.store$.view(lens('appName'));
+    const todos = this.store$.view(lens('todos'));
     this.count = todos.map(t => Object.keys(t).length);
     this.completed = todos.map(t => Object.keys(t).reduce((p, k) => p + t[k].isDone, 0));
 

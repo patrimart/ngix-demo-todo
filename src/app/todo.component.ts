@@ -7,7 +7,7 @@ import { IterableX } from 'ix/iterable';
 import { of } from 'ix/iterable/of';
 import { map } from 'ix/iterable/map';
 
-import { IxStore, lens, ixAction, ix } from '@ngix/store';
+import { IxStore, ixAction, ix } from '@ngix/store';
 
 import { AppState } from './app.module';
 import {
